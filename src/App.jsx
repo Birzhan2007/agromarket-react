@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import ProductCard from './components/ProductCard';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import ContactForm from './components/ContactForm';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -37,33 +40,51 @@ function App() {
 
   return (
     <>
-      <header>
-        <h1>АгроМаркет</h1>
-        <div>Корзина: {cartCount}</div>
-      </header>
-      <main>
-        <input
-          className="search"
-          type="text"
-          placeholder="Поиск товара..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <section className="catalog">
-          <h2>Каталог</h2>
+      <Header cartCount={cartCount} />
+
+      <main className="page">
+        <section id="catalog" className="catalog">
+          <div className="catalog-toolbar">
+            <h2>Каталог</h2>
+            <input
+              className="search"
+              type="search"
+              placeholder="Поиск товара..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
           {loading && <p>Загрузка...</p>}
           {error && <p className="error">{error}</p>}
-          {!loading &&
-            !error &&
-            filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAdd={handleAddToCart}
-              />
-            ))}
+
+          <div className="product-grid">
+            {!loading &&
+              !error &&
+              filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAdd={handleAddToCart}
+                  featured={product.id === 1}
+                />
+              ))}
+          </div>
         </section>
+
+        <aside id="delivery" className="sidebar">
+          <h3>Доставка</h3>
+          <ul>
+            <li>Астана — на следующий день</li>
+            <li>Акмолинская область — 2–3 дня</li>
+            <li>Бесплатно от 20 000 тг</li>
+          </ul>
+        </aside>
+
+        <ContactForm />
       </main>
+
+      <Footer />
     </>
   );
 }
